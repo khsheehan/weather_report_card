@@ -7,6 +7,14 @@ class Welcome extends CI_Controller {
 		$data['page'] = 'welcome_message';
 		$this->load->view('layouts/template',$data);
 	}
+
+	public function scrape($id=1){
+		// Default to scraping for New York, NY
+		$this->load->model('scraping_model');
+		$data['scrape'] = $this->scraping_model->scrape($id);
+		$data['page'] = 'welcome_message';
+		$this->load->view('layouts/template',$data);
+	}
 }
 
 /* End of file welcome.php */
