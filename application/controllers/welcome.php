@@ -8,10 +8,9 @@ class Welcome extends CI_Controller {
 		$this->load->view('layouts/template',$data);
 	}
 
-	public function scrape($id=1){
-		// Default to scraping for New York, NY
+	public function scrape(){
 		$this->load->model('scraping_model');
-		$data['scrape'] = $this->scraping_model->scrape($id);
+		$data['scrape'] = $this->scraping_model->scrape();
 		$data['page'] = 'welcome_message';
 		$this->load->view('layouts/template',$data);
 	}

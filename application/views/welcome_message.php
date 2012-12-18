@@ -1,9 +1,7 @@
 <div class='row'>
 	<div class='twelve column'>
 		<pagecontent>
-			<pre>
-				<?print_r($scrape);?>
-			</pre>
+			SCRAPED
 		</pagecontent>
 	</div>
 </div>

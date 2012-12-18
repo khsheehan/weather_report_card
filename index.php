@@ -155,6 +155,21 @@ if (defined('ENVIRONMENT'))
 	}
 
 /*
+|---------------------------------------------------------------
+| DEFAULT TIMEZONE
+|---------------------------------------------------------------
+|
+| Set the default timezone for date/time functions to use if
+| none is set on the server.
+|
+*/
+
+if( ! ini_get('date.timezone') )
+{
+   date_default_timezone_set('GMT');
+}
+
+/*
  * -------------------------------------------------------------------
  *  Now that we know the path, set the main path constants
  * -------------------------------------------------------------------
