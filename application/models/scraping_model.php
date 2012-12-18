@@ -147,6 +147,8 @@ class Scraping_model extends CI_Model {
 		$scrape['date_prediction'] = $today;
 		$scrape['source_id'] = $source_id;
 
+		unset($html);
+
 		$this->db->insert('forecasts',$scrape);
 
 	}
