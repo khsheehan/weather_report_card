@@ -1,0 +1,33 @@
+/* ==== TYPOGRAPHY ================= */
+@import url();
+
+h1{font-size: 2em;}
+h2{font-size: 1.8em;}
+h3{font-size: 1.4em;}
+h4{font-size: 1.2em;}
+h5{font-size: 1.1em;}
+
+/* ==== STRUCTURE ================== */
+
+body{
+	font-size: 16px;
+	color: #2a2a2a;
+}
+
+pagecontent{
+	display: block;
+	background: #f8f8f8;
+}
+
+/* ==== HEADER ===================== */
+
+header{
+	background: #f8f8f8;
+}
+
+/* ==== FOOTER ===================== */
+
+footer{
+	background: #f8f8f8;
+	margin: 2em 0 0 0;
+}

@@ -1,5 +1,7 @@
 <div class='row'>
 	<div class='twelve column'>
-		WELCOME
+		<pagecontent>
+			WELCOME
+		</pagecontent>
 	</div>
 </div>

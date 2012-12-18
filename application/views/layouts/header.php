@@ -20,8 +20,9 @@
 
 <!-- Included CSS Files (Compressed) -->
 
-<link rel="stylesheet" href="<?=site_url('html/stylesheets/foundation.min.css');?>">
+<link rel="stylesheet" href="<?=site_url('html/stylesheets/foundation.css');?>">
 <link rel="stylesheet" href="<?=site_url('html/stylesheets/app.css');?>">
+<link rel="stylesheet" href="<?=site_url('html/stylesheets/custom.css');?>">
 
 <script src="<?=site_url('html/javascripts/modernizr.foundation.js');?>"></script>
 
@@ -35,7 +36,9 @@
 
 	<div class="row">
 		<div class="twelve columns">
-			<h2>Weather Report Card</h2>
-			<hr />
+			<header>
+				<h2>Weather Report Card</h2>
+				<hr />
+			</header>
 		</div>
 	</div>
