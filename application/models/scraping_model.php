@@ -8,11 +8,11 @@ class Scraping_model extends CI_Model {
 
 	function scrape(){
 		require_once('application/libraries/Simple_html_dom.php');
-
+		$today = date('Y-m-d');
 		// $this->weather_channel();
 		// $this->accuweather();
 		// $this->results();
-		$this->grade(2,'2012-12-22');
+		$this->grade('2012-12-22');
 	}
 
 	function results(){
@@ -174,33 +174,37 @@ class Scraping_model extends CI_Model {
 
 	}
 
-	function grade($id,$date){
-		$sql = "SELECT * FROM (SELECT forecasts.location_id, forecasts.date_3_day, forecasts.source_id, forecasts.temp_hi as pred_hi, forecasts.temp_lo as pred_lo, forecasts.pop as pred_pop FROM forecasts WHERE source_id = ? AND date_3_day = ?) q1 LEFT JOIN (SELECT results.date, results.location_id, results.temp_hi as real_hi, results.temp_lo as real_lo, results.precipitation as real_pop FROM results WHERE `date` = ?) q2 ON q1.date_3_day = q2.date AND q1.location_id = q2.location_id";
-		$vars = array($id,$date,$date);
-		$query = $this->db->query($sql,$vars)->result_array();
+	function grade($date){
 
-		$grades = array();
+		$this->db->select('COUNT(*) as c');
+		$count = $this->db->get('sources')->result_array();
+		$c = $count[0]['c'];
 
-		echo "<h2>Grading results for Weather Channel (id: 2) on ".$date."</h2>";
-		foreach ($query as $data) {
-			echo "LOCATION ID: <strong>".$data['location_id']."</strong><br />";
-			$delta_h = abs($data['pred_hi']-$data['real_hi']);
-			$delta_l = abs($data['pred_lo']-$data['real_lo']);
-			$delta_p = abs($data['pred_pop']-$data['real_pop']);
-			$t = (0.3*($delta_l) + 0.94*($delta_h));
-			$p = (abs(((50-abs($delta_p))/50)-1))*10;
-			$g = 100 - $t - $p;
-			$g = ($g<0) ? 0 : $g;
-			array_push($grades, $g);
-			echo "GRADE: ".$g."<br />";
-			echo "<br />";
+		for ($id=2; $id <= $c; $id++) {
+			$sql = "SELECT * FROM (SELECT forecasts.location_id, forecasts.date_3_day, forecasts.source_id, forecasts.temp_hi as pred_hi, forecasts.temp_lo as pred_lo, forecasts.pop as pred_pop FROM forecasts WHERE source_id = ? AND date_3_day = ?) q1 LEFT JOIN (SELECT results.date, results.location_id, results.temp_hi as real_hi, results.temp_lo as real_lo, results.precipitation as real_pop FROM results WHERE `date` = ?) q2 ON q1.date_3_day = q2.date AND q1.location_id = q2.location_id";
+			$vars = array($id,$date,$date);
+			$query = $this->db->query($sql,$vars)->result_array();
+
+			$grades = array();
+
+			foreach ($query as $data) {
+				$delta_h = abs($data['pred_hi']-$data['real_hi']);
+				$delta_l = abs($data['pred_lo']-$data['real_lo']);
+				$delta_p = abs($data['pred_pop']-$data['real_pop']);
+				$t = (0.3*($delta_l) + 0.94*($delta_h));
+				$p = (abs(((50-abs($delta_p))/50)-1))*10;
+				$g = 100 - $t - $p;
+				$g = ($g<0) ? 0 : $g;
+				$insert['date'] = $date;
+				$insert['grade'] = $g;
+				$insert['location_id'] = $data['location_id'];
+				$insert['source_id'] = $data['source_id'];
+				$this->db->insert('grades',$insert);
+				array_push($grades, $g);
+			}
+			$fn = (array_sum($grades)/sizeof($grades));
 		}
 
-		echo "<h2>Final grade for Weather Channel (id: 2) on ".$date."</h2>";
-		$fn = (array_sum($grades)/sizeof($grades));
-		echo $fn;
-
-		exit;
 	}
 
 }
