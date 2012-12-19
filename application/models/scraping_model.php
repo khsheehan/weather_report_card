@@ -9,14 +9,15 @@ class Scraping_model extends CI_Model {
 	function scrape(){
 		require_once('application/libraries/Simple_html_dom.php');
 		// Get all locations in array
-		$this->db->select('COUNT(*) as c');
-		$count = $this->db->get('locations')->result_array();
-		$c = $count[0]['c'];
-		for ($i=1; $i < $c; $i++) { 
-			$this->results($i);
-			$this->weather_channel($i);
-			$this->accuweather($i);
-		}
+		// $this->db->select('COUNT(*) as c');
+		// $count = $this->db->get('locations')->result_array();
+		// $c = $count[0]['c'];
+		// for ($i=1; $i < $c; $i++) { 
+		// 	$this->results($i);
+		// 	$this->weather_channel($i);
+		// 	$this->accuweather($i);
+		// }
+		$this->grade(2);
 	}
 
 	function results($id){
@@ -151,6 +152,16 @@ class Scraping_model extends CI_Model {
 
 		$this->db->insert('forecasts',$scrape);
 
+	}
+
+	function grade($id){
+		$sql = "SELECT * FROM (SELECT forecasts.location_id, forecasts.date_3_day, forecasts.source_id, forecasts.temp_hi as pred_hi, forecasts.temp_lo as pred_lo, forecasts.pop as pred_pop FROM forecasts WHERE source_id = ?) q1 LEFT JOIN (SELECT results.date, results.location_id, results.temp_hi as real_hi, results.temp_lo as real_lo, results.precipitation as real_pop FROM results) q2 ON q1.date_3_day = q2.date AND q1.location_id = q2.location_id";
+		$vars = array($id);
+		$query = $this->db->query($sql,$vars)->result_array();
+
+		echo '<pre>';
+		print_r($query);
+		exit;
 	}
 
 }
