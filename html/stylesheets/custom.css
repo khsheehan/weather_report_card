@@ -1,33 +1,57 @@
 /* ==== TYPOGRAPHY ================= */
-@import url();
+@import url(http://fonts.googleapis.com/css?family=Monoton);
+@import url(http://fonts.googleapis.com/css?family=Ubuntu:400,500);
 
-h1{font-size: 2em;}
-h2{font-size: 1.8em;}
-h3{font-size: 1.4em;}
-h4{font-size: 1.2em;}
-h5{font-size: 1.1em;}
+h1{font-size: 2em; color:#fff; font-family: Ubuntu; margin: 0 0 20px 0;}
+h2{font-size: 1.8em; color:#fff; font-family: Ubuntu; margin: 0 0 20px 0;}
+h3{font-size: 1.4em; color:#fff; font-family: Ubuntu; margin: 0 0 20px 0;}
+h4{font-size: 1.2em; color:#fff; font-family: Ubuntu; margin: 0 0 20px 0;}
+h5{font-size: 1.1em; color:#fff; font-family: Ubuntu; margin: 0 0 20px 0;}
+
+.inline{display: inline;}
+
+.shadow {
+	text-shadow: 1px 1px 3px #000;
+	filter: dropshadow(color=#000, offx=1, offy=1);
+}
 
 /* ==== STRUCTURE ================== */
 
 body{
+	font-family: Ubuntu;
+	background: #B9543C;
 	font-size: 16px;
-	color: #2a2a2a;
+	color: #fff;
 }
 
 pagecontent{
 	display: block;
-	background: #f8f8f8;
 }
 
 /* ==== HEADER ===================== */
 
 header{
-	background: #f8f8f8;
+	text-align: center;
+	border-bottom: solid 20px #06736C;
+	background: #053B44;
+	margin-bottom: 20px;
 }
+
+header h2{
+	margin-top: 20px;
+	font-size: 3em;
+	font-family: Monoton;
+	font-weight: 100;
+	color: #fff;
+}
+
+/* ==== WELCOME ==================== */
+
+
 
 /* ==== FOOTER ===================== */
 
 footer{
-	background: #f8f8f8;
-	margin: 2em 0 0 0;
+	font-size: .8em;
+	margin: 20px 0 0 0;
 }

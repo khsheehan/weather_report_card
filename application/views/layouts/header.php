@@ -34,11 +34,11 @@
 </head>
 <body>
 
-	<div class="row">
-		<div class="twelve columns">
-			<header>
-				<h2>Weather Report Card</h2>
-				<hr />
-			</header>
+	<header>
+		<div class="row">
+			<div class="twelve columns">
+				<h2>WEATHER&nbsp;&nbsp;&nbsp;&nbsp;REPORT&nbsp;&nbsp;&nbsp;&nbsp;CARD</h2>
+				<h5>- public accountibility for weather forecasters -</h5>
+			</div>
 		</div>
-	</div>
+	</header>

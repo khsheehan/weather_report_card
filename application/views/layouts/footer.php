@@ -1,7 +1,10 @@
 <div class='row'>
 	<div class='twelve column'>
+		<!-- <pre>
+			<?print_r($grades);?>
+		</pre> -->
 		<footer>
-			Footer
+			Copyright &copy; 2012 Weather Report Card.
 		</footer>
 	</div>
 </div>

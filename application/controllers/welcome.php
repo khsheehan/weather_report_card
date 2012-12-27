@@ -4,7 +4,14 @@ class Welcome extends CI_Controller {
 
 	public function index()
 	{
+		$this->load->model('scraping_model');
+		$data['grades'] = $this->scraping_model->get_grades('2012-12-10');
 		$data['page'] = 'welcome_message';
+
+		foreach ($data['grades'][1] as $grade => $stats) {
+			$data['grades'][1][$grade]['letter'] = $this->_lettergrade($stats['total']/$stats['num']);
+		}
+
 		$this->load->view('layouts/template',$data);
 	}
 
