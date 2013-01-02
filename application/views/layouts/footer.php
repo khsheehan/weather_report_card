@@ -1,9 +1,7 @@
 <div class='row'>
 	<div class='twelve column'>
-		<!-- <pre>
-			<?print_r($grades);?>
-		</pre> -->
 		<footer>
+			<?print_r($this->session->all_userdata());?>
 			Copyright &copy; 2012 Weather Report Card.
 		</footer>
 	</div>
@@ -52,6 +50,8 @@
 
 <!-- Initialize JS Plugins -->
 <script src="<?=site_url('html/javascripts/app.js');?>"></script>
+
+<script src="<?=site_url('html/javascripts/global.js');?>"></script>
 
 </body>
 </html>

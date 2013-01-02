@@ -47,7 +47,80 @@ header h2{
 
 /* ==== WELCOME ==================== */
 
+div.grade_wrap{
+	font-size: 1.2em;
+	font-weight: 700;
+	width: 5em;
+	float: right;
+	display: inline;
+}
 
+span.letter_wrap{
+	display: inline-block;
+	text-align: left;
+}
+
+span.number_wrap{
+	float: right;
+	text-align: right;
+	display: inline-block;
+	text-align: right;
+}
+
+div.report{
+	margin: 0 0 20px 0;
+}
+
+div.details{
+	display: none;
+}
+
+div.details table.report_card{
+	margin: 0;
+}
+
+table.report_card{
+	width: 100%;
+}
+
+tr.head_row{
+	font-weight: 500;
+}
+
+td.center{
+	text-align: center;
+}
+
+td.right{
+	text-align: right;
+}
+
+div.source_wrap{
+	cursor: pointer;
+	border-radius: 4px;
+	padding: 8px;
+	background: #DB765E;
+	margin: 0 0 14px 0;
+}
+
+input.zip_input{
+	border-radius: 4px;
+	box-shadow: none;
+	height: 36px;
+	border: none;
+	background: #DB765E;
+}
+
+/* ==== LOGIN / SIGNUP ============= */
+
+label {
+	color: #fff;
+}
+
+input.button{
+	padding-top: 8px;
+	height: 32px;
+}
 
 /* ==== FOOTER ===================== */
 

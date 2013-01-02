@@ -353,6 +353,17 @@ $config['time_reference'] = 'local';
 */
 $config['rewrite_short_tags'] = FALSE;
 
+/*
+|--------------------------------------------------------------------------
+| Encryption Key
+|--------------------------------------------------------------------------
+|
+| If you use the Encryption class or the Session class you
+| MUST set an encryption key.  See the user guide for info.
+|
+*/
+$config['encryption_key'] = '4fjzD#6Ba83kjFEwqoN$8vs!x4n8v0';
+
 
 /*
 |--------------------------------------------------------------------------

@@ -25,6 +25,7 @@
 <link rel="stylesheet" href="<?=site_url('html/stylesheets/custom.css');?>">
 
 <script src="<?=site_url('html/javascripts/modernizr.foundation.js');?>"></script>
+<!-- <script type='text/javascript' src="http://code.jquery.com/jquery-1.8.2.js"></script> -->
 
 <!-- IE Fix for HTML5 Tags -->
 <!--[if lt IE 9]>

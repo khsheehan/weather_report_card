@@ -6,13 +6,20 @@ class Scraping_model extends CI_Model {
 		parent::__construct();
 	}
 
-	function scrape(){
+	function scrape($type){
 		require_once('application/libraries/Simple_html_dom.php');
 		$today = date('Y-m-d');
-		$this->weather_channel();
-		$this->accuweather();
-		$this->results();
-		// $this->grade('2012-12-22');
+		if($type == 'forecasts' or $type == 'all'):
+			$this->weather_channel();
+			$this->accuweather();
+		endif;
+		if($type == 'results' or $type == 'all'):
+			$this->results();
+		endif;
+		if($type == 'grade' or $type == 'all'):
+			$yesterday = date("M")." ".((date("d"))-1).', '.date("Y");
+			$this->grade($yesterday);
+		endif;
 	}
 
 	function results(){
@@ -209,16 +216,17 @@ class Scraping_model extends CI_Model {
 
 	function get_grades($date){
 		$grades = array();
-		$sql = "SELECT sources.name, sources.source_id, grades.grade, grades.location_id, grades.date FROM sources LEFT JOIN grades ON grades.source_id = sources.source_id WHERE grades.date = ? ORDER BY grades.source_id";
-		$vars = array($date);
-		$all_grades = $this->db->query($sql,$vars)->result_array();
-
 		$sql = "SELECT COUNT(*) as c FROM sources";
 		$num_sources_raw = $this->db->query($sql)->result_array();
-		$num_sources = $num_sources_raw[0]['c'] - 1;
+		$num_sources = $num_sources_raw[0]['c'];
 
-		for ($i=1; $i <= $num_sources; $i++) {
-			$sql = "SELECT sources.name, SUM(grades.grade) as total, COUNT(grades.grade) as num FROM sources LEFT JOIN grades ON grades.source_id = sources.source_id WHERE grades.date = ? AND grades.source_id = ?";
+		for ($i=2; $i <= $num_sources; $i++) {
+			$sql = "SELECT forecasts.temp_hi as pred_hi, forecasts.temp_lo as pred_lo, forecasts.pop as pred_pop, results.temp_hi as real_hi, results.temp_lo as real_lo, results.precipitation as real_pop, sources.name, grades.grade, grades.date, locations.name FROM sources LEFT JOIN grades ON grades.source_id = sources.source_id LEFT JOIN locations ON locations.location_id = grades.location_id LEFT JOIN forecasts on forecasts.location_id = grades.location_id AND forecasts.source_id = grades.source_id LEFT JOIN results on results.location_id = grades.location_id WHERE grades.date = ? AND grades.source_id = ? ORDER BY grades.source_id";
+			$all_grades[$i] = $this->db->query($sql,array($date,$i))->result_array();
+		}
+
+		for ($i=2; $i <= $num_sources; $i++) {
+			$sql = "SELECT sources.name, sources.source_id, SUM(grades.grade) as total, COUNT(grades.grade) as num FROM sources LEFT JOIN grades ON grades.source_id = sources.source_id WHERE grades.date = ? AND grades.source_id = ?";
 			$query = $this->db->query($sql,array($date,$i))->result_array();
 			$grades[$i] = $query[0];
 		}

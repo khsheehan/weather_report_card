@@ -5,20 +5,17 @@ class Welcome extends CI_Controller {
 	public function index()
 	{
 		$this->load->model('scraping_model');
-		$data['grades'] = $this->scraping_model->get_grades('2012-12-10');
+		$data['grades'] = $this->scraping_model->get_grades(date('Y-m-d'));
 		$data['page'] = 'welcome_message';
 
 		foreach ($data['grades'][1] as $grade => $stats) {
-			$data['grades'][1][$grade]['letter'] = $this->_lettergrade($stats['total']/$stats['num']);
+			if($stats['num']):
+				$data['grades'][1][$grade]['letter'] = $this->_lettergrade($stats['total']/$stats['num']);
+			else:
+				$data['grades'][1][$grade]['letter'] = NULL;
+			endif;
 		}
 
-		$this->load->view('layouts/template',$data);
-	}
-
-	public function scrape(){
-		$this->load->model('scraping_model');
-		$data['scrape'] = $this->scraping_model->scrape();
-		$data['page'] = 'welcome_message';
 		$this->load->view('layouts/template',$data);
 	}
 
@@ -39,6 +36,10 @@ class Welcome extends CI_Controller {
 		$fl = ($fn>=94) ? "A" : $fl;
 		$fl = ($fn>=98) ? "A+" : $fl;
 		return $fl;
+	}
+
+	public function zip(){
+		print_r($_POST);
 	}
 }
 
