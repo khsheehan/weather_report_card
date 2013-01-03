@@ -1,6 +1,6 @@
 <div class='row'>
 	<div class='eight column'>
-		<h3 class='shadow'>Grades for <?=$location;?> on <?=date("M")." ".((date("d"))-1).', '.date("Y");?></h3>
+		<h3 class='shadow'>Grades for <?=$location;?> on <?=date('M d, Y',strtotime($date));?></h3>
 		<?foreach ($grades[1] as $grade) {?>
 		<div class='report'>
 			<div class='row'>
@@ -56,16 +56,30 @@
 		<?}?>
 	</div>
 	<div class='four column'>
-		<h3 class='shadow'>(Semi) Local Grades</h3>
-		<form method='get' action='<?=site_url('zip');?>'>
-			<input name='zip' class='zip_input' placeholder='zipcode' type='text' />
-			<label>Or choose the closest city</label>
-			<select name='city' class='eight column'>
-				<?foreach ($locations as $location) {?>
-				<option value='<?=$location['zip'];?>'><?=$location['name'];?></option>
-				<?}?>
-			</select>
-			<input type='submit' class='four column' value='Submit'/>
-		</form>
+		<div class='row sidebar_sec'>
+			<div class='twelve column'>
+				<h3 class='shadow'>(Semi) Local Grades</h3>
+				<form method='get' action='<?=site_url('zip');?>'>
+					<input name='zip' class='zip_input' placeholder='Zipcode' type='text' />
+					<label>Or choose the closest city</label>
+					<select name='city' class='eight column'>
+						<?foreach ($locations as $location) {?>
+						<option value='<?=$location['zip'];?>'><?=$location['name'];?></option>
+						<?}?>
+					</select>
+					<input type='submit' class='four column' value='Submit'/>
+				</form>
+			</div>
+		</div>
+		<div class='row sidebar_sec'>
+			<div class='twelve column'>
+				<h3 class='shadow'>Archived Scores</h3>
+				<form method='get' action='<?=site_url('zip');?>'>
+					<input name='date' id='datepicker' class='zip_input' placeholder='Choose a date' type='text' />
+					<input type='hidden' name='city' value='<?=$zip;?>' />
+					<input type='submit' class='four column' value='Submit'/>
+				</form>
+			</div>
+		</div>
 	</div>
 </div>

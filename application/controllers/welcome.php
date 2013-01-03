@@ -5,7 +5,7 @@ class Welcome extends CI_Controller {
 	public function index()
 	{
 		$this->load->model('scraping_model');
-		$data['grades'] = $this->scraping_model->get_grades(date("Y")."-".str_pad(((date("d"))-1),2,0,STR_PAD_LEFT).'-'.date("m"));
+		$data['grades'] = $this->scraping_model->get_grades(date("Y")."-".date("m").'-'.str_pad(((date("d"))-1),2,0,STR_PAD_LEFT));
 		$data['page'] = 'welcome_message';
 		$sql = "SELECT name, zip FROM locations ORDER BY name";
 		$query = $this->db->query($sql)->result_array();

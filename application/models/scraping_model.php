@@ -18,7 +18,7 @@ class Scraping_model extends CI_Model {
 			$this->results();
 		endif;
 		if($type == 'grade' or $type == 'all'):
-			$yesterday = date("Y")."-".str_pad(((date("d"))-1),2,0,STR_PAD_LEFT).'-'.date("m");
+			$yesterday = date("Y")."-".date("m").'-'.str_pad(((date("d"))-1),2,0,STR_PAD_LEFT);
 			$this->grade($yesterday);
 		endif;
 	}
@@ -267,7 +267,7 @@ class Scraping_model extends CI_Model {
 				$this->db->insert('grades',$insert);
 				array_push($grades, $g);
 			}
-			$fn = (array_sum($grades)/sizeof($grades));
+
 		}
 
 	}

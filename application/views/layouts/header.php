@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="<?=site_url('html/stylesheets/foundation.css');?>">
 <link rel="stylesheet" href="<?=site_url('html/stylesheets/app.css');?>">
 <link rel="stylesheet" href="<?=site_url('html/stylesheets/custom.css');?>">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 
 <script src="<?=site_url('html/javascripts/modernizr.foundation.js');?>"></script>
 <!-- <script type='text/javascript' src="http://code.jquery.com/jquery-1.8.2.js"></script> -->

@@ -49,7 +49,7 @@
 
 <!-- Initialize JS Plugins -->
 <script src="<?=site_url('html/javascripts/app.js');?>"></script>
-
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
 <script src="<?=site_url('html/javascripts/global.js');?>"></script>
 
 </body>

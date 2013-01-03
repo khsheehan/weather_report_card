@@ -4,3 +4,6 @@ $('.source_wrap').click(function(e){
 		// Nothing
 	});
 });
+
+
+$( "#datepicker" ).datepicker();

@@ -4,22 +4,30 @@ class Zip extends CI_Controller {
 
 	public function index()
 	{
-		if($_GET['zip']): // They chose a city
+		if(array_key_exists('zip', $_GET)):
 			$this->load->model('zip_model');
 			$zip = $this->zip_model->proximity_zip($_GET['zip']);
 		else:
-			$zip = $_GET['city'];
+			if(array_key_exists('city', $_GET)):
+				$zip = $_GET['city'];
+			endif;
 		endif;
 
 		if(!$zip):
 			redirect();
 		endif;
 
+		if(array_key_exists('date', $_GET)):
+			$data['date'] = date('Y-m-d',strtotime($_GET['date']));
+		else:
+			$data['date'] = date("Y")."-".date("m").'-'.str_pad(((date("d"))-1),2,0,STR_PAD_LEFT);
+		endif;
+
 		$this->load->model('scraping_model');
-		$data['grades'] = $this->scraping_model->get_grades(date("Y")."-".str_pad(((date("d"))-1),2,0,STR_PAD_LEFT).'-'.date("m"),$zip);
+		$data['grades'] = $this->scraping_model->get_grades($data['date'],$zip);
 		$sql = "SELECT name, zip FROM locations ORDER BY name";
 		$query = $this->db->query($sql)->result_array();
-		$data['locations'] = $query;
+		$data['locations'] = $query;	
 		foreach ($data['grades'][1] as $grade => $stats) {
 			if($stats['num']):
 				$data['grades'][1][$grade]['letter'] = $this->_lettergrade($stats['total']/$stats['num']);
@@ -29,6 +37,7 @@ class Zip extends CI_Controller {
 		}
 		$data['page'] = 'zip_view';
 		$sql = "SELECT name FROM locations WHERE zip  = ?";
+		$data['zip'] = $zip;
 		$query = $this->db->query($sql,array($zip))->result_array();
 		$data['location'] = $query[0]['name'];
 		$this->load->view('layouts/template',$data);

@@ -111,6 +111,10 @@ input.zip_input{
 	background: #DB765E;
 }
 
+div.row.sidebar_sec{
+	margin-bottom: 40px;
+}
+
 /* ==== LOGIN / SIGNUP ============= */
 
 label {
