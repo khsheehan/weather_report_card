@@ -5,8 +5,11 @@ class Welcome extends CI_Controller {
 	public function index()
 	{
 		$this->load->model('scraping_model');
-		$data['grades'] = $this->scraping_model->get_grades(date('Y-m-d'));
+		$data['grades'] = $this->scraping_model->get_grades(date("Y")."-".str_pad(((date("d"))-1),2,0,STR_PAD_LEFT).'-'.date("m"));
 		$data['page'] = 'welcome_message';
+		$sql = "SELECT name, zip FROM locations ORDER BY name";
+		$query = $this->db->query($sql)->result_array();
+		$data['locations'] = $query;
 
 		foreach ($data['grades'][1] as $grade => $stats) {
 			if($stats['num']):
@@ -38,9 +41,6 @@ class Welcome extends CI_Controller {
 		return $fl;
 	}
 
-	public function zip(){
-		print_r($_POST);
-	}
 }
 
 /* End of file welcome.php */

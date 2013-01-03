@@ -4,6 +4,9 @@ class Scrape extends CI_Controller {
 
 	public function forecasts()
 	{
+		if(!$this->session->userdata('is_super')):
+			redirect();
+		endif;
 		$this->load->model('scraping_model');
 		$this->scraping_model->scrape('forecasts');
 		echo "Forecasts scraped";
@@ -12,6 +15,9 @@ class Scrape extends CI_Controller {
 
 	public function results()
 	{
+		if(!$this->session->userdata('is_super')):
+			redirect();
+		endif;
 		$this->load->model('scraping_model');
 		$this->scraping_model->scrape('results');
 		echo "Results scraped";
@@ -20,6 +26,9 @@ class Scrape extends CI_Controller {
 
 	public function grade()
 	{
+		if(!$this->session->userdata('is_super')):
+			redirect();
+		endif;
 		$this->load->model('scraping_model');
 		$this->scraping_model->scrape('grade');
 		echo "Grades calculated";
@@ -28,6 +37,9 @@ class Scrape extends CI_Controller {
 
 	public function all()
 	{
+		if(!$this->session->userdata('is_super')):
+			redirect();
+		endif;
 		$this->load->model('scraping_model');
 		$this->scraping_model->scrape('all');
 		echo "Forecasts scraped";

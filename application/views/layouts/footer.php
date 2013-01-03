@@ -1,7 +1,6 @@
 <div class='row'>
 	<div class='twelve column'>
 		<footer>
-			<?print_r($this->session->all_userdata());?>
 			Copyright &copy; 2012 Weather Report Card.
 		</footer>
 	</div>

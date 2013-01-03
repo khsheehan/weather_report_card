@@ -1,6 +1,6 @@
 <div class='row'>
 	<div class='eight column'>
-		<h3 class='shadow'>Grades for <?=date("M")." ".((date("d"))-1).', '.date("Y");?></h3>
+		<h3 class='shadow'>Grades for <?=$location;?> on <?=date("M")." ".((date("d"))-1).', '.date("Y");?></h3>
 		<?foreach ($grades[1] as $grade) {?>
 		<div class='report'>
 			<div class='row'>
@@ -34,7 +34,7 @@
 							</tr>
 						<?foreach ($grades[0][$grade['source_id']] as $grade) {?>
 							<tr>
-								<td><a class='white_link' href='<?=site_url('zip?zip='.$grade['zip']);?>'><?=$grade['name'];?></a></td>
+								<td><?=$grade['name'];?></td>
 								<td class='center'><?=$grade['grade'];?>%</td>
 								<td class='center'><?=$grade['pred_lo'];?>&#176;</td>
 								<td class='center'><?=$grade['pred_hi'];?>&#176;</td>

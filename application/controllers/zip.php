@@ -4,7 +4,53 @@ class Zip extends CI_Controller {
 
 	public function index()
 	{
-		print_r($_GET);
+		if($_GET['zip']): // They chose a city
+			$this->load->model('zip_model');
+			$zip = $this->zip_model->proximity_zip($_GET['zip']);
+		else:
+			$zip = $_GET['city'];
+		endif;
+
+		if(!$zip):
+			redirect();
+		endif;
+
+		$this->load->model('scraping_model');
+		$data['grades'] = $this->scraping_model->get_grades(date("Y")."-".str_pad(((date("d"))-1),2,0,STR_PAD_LEFT).'-'.date("m"),$zip);
+		$sql = "SELECT name, zip FROM locations ORDER BY name";
+		$query = $this->db->query($sql)->result_array();
+		$data['locations'] = $query;
+		foreach ($data['grades'][1] as $grade => $stats) {
+			if($stats['num']):
+				$data['grades'][1][$grade]['letter'] = $this->_lettergrade($stats['total']/$stats['num']);
+			else:
+				$data['grades'][1][$grade]['letter'] = NULL;
+			endif;
+		}
+		$data['page'] = 'zip_view';
+		$sql = "SELECT name FROM locations WHERE zip  = ?";
+		$query = $this->db->query($sql,array($zip))->result_array();
+		$data['location'] = $query[0]['name'];
+		$this->load->view('layouts/template',$data);
+	}
+
+	private function _lettergrade($fn){
+		$fl = "";
+		$fl = ($fn<58) ? "F" : $fl;
+		$fl = ($fn>=58) ? "F+" : $fl;
+		$fl = ($fn>=60) ? "D-" : $fl;
+		$fl = ($fn>=64) ? "D" : $fl;
+		$fl = ($fn>=68) ? "D+" : $fl;
+		$fl = ($fn>=70) ? "C-" : $fl;
+		$fl = ($fn>=74) ? "C" : $fl;
+		$fl = ($fn>=78) ? "C+" : $fl;
+		$fl = ($fn>=80) ? "B-" : $fl;
+		$fl = ($fn>=84) ? "B" : $fl;
+		$fl = ($fn>=88) ? "B+" : $fl;
+		$fl = ($fn>=90) ? "A-" : $fl;
+		$fl = ($fn>=94) ? "A" : $fl;
+		$fl = ($fn>=98) ? "A+" : $fl;
+		return $fl;
 	}
 }
 

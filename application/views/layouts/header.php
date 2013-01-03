@@ -38,8 +38,17 @@
 	<header>
 		<div class="row">
 			<div class="twelve columns">
-				<h2>WEATHER&nbsp;&nbsp;&nbsp;&nbsp;REPORT&nbsp;&nbsp;&nbsp;&nbsp;CARD</h2>
-				<h5>- public accountibility for weather forecasters -</h5>
+				<h2><a href='<?=site_url();?>'>WEATHER&nbsp;&nbsp;&nbsp;&nbsp;REPORT&nbsp;&nbsp;&nbsp;&nbsp;CARD</a></h2>
+				<!-- <h5>- public accountibility for weather forecasters -</h5> -->
+				<?if(!$this->session->userdata('name')):?>
+					<h5><a class='white_link' href='<?=site_url('login');?>'>Log In</a> - or - <a class='white_link' href='<?=site_url('signup');?>'>Sign Up</a></h5>
+				<?else:?>
+				<?
+					$greetings = array('Welcome', 'Hello', 'Howdy', 'Sup');
+					$rand = array_rand($greetings);
+				?>
+					<h5><?=$greetings[$rand].' '.$this->session->userdata('name');?>!</h5>
+				<?endif;?>
 			</div>
 		</div>
 	</header>
