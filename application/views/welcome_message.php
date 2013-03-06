@@ -58,23 +58,8 @@
 	<div class='four column'>
 		<div class='row sidebar_sec'>
 			<div class='twelve column'>
-				<h3 class='shadow'>(Semi) Local Grades</h3>
-				<form method='get' action='<?=site_url('zip');?>'>
-					<input name='zip' class='zip_input' placeholder='Zipcode' type='text' />
-					<label>Or choose the closest city</label>
-					<select name='city' class='eight column'>
-						<?foreach ($locations as $location) {?>
-						<option value='<?=$location['zip'];?>'><?=$location['name'];?></option>
-						<?}?>
-					</select>
-					<input type='submit' class='four column' value='Submit'/>
-				</form>
-			</div>
-		</div>
-		<div class='row sidebar_sec'>
-			<div class='twelve column'>
 				<h3 class='shadow'>Archived Scores</h3>
-				<form method='get' action='<?=site_url('zip');?>'>
+				<form method='get' action='<?=site_url('date');?>'>
 					<input name='date' id='datepicker' class='zip_input' placeholder='Choose a date' type='text' />
 					<input type='submit' class='four column' value='Submit'/>
 				</form>
