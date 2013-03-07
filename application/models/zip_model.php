@@ -27,7 +27,6 @@ class Zip_model extends CI_Model {
 		foreach ($query as $zip) {
 			array_push($available_zips, $zip['zip']);
 		}
-
 		$zips = array_intersect($available_zips, $closest_zips);
 		if(sizeof($zips)):
 			return reset($zips);

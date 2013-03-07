@@ -1,7 +1,7 @@
 <div class='row'>
 	<div class='twelve column'>
 		<footer>
-			Copyright &copy; 2012 Weather Report Card.
+			Copyright &copy; 2013 Weather Report Card.
 		</footer>
 	</div>
 </div>

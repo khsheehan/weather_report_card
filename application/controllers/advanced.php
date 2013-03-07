@@ -1,12 +1,16 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+class Advanced extends CI_Controller {
 
 	public function index()
 	{
 		$this->load->model('scraping_model');
-		$data['grades'] = $this->scraping_model->get_grades(date("m")."/".str_pad(((date("d"))-1),2,0,STR_PAD_LEFT)."/".date("Y"),NULL);
-		$data['page'] = 'welcome_message';
+		$data['formatted_date'] = date("M d, Y",strtotime($_GET['date']));
+		$data['grades'] = $this->scraping_model->get_grades($_GET['date'],$_GET['zip']);
+		if($data['grades'] == NULL){
+			redirect();
+		}
+		$data['page'] = 'advanced_view';
 		$sql = "SELECT name, zip FROM locations ORDER BY name";
 		$query = $this->db->query($sql)->result_array();
 		$data['locations'] = $query;
@@ -40,7 +44,6 @@ class Welcome extends CI_Controller {
 		$fl = ($fn>=98) ? "A+" : $fl;
 		return $fl;
 	}
-
 }
 
 /* End of file welcome.php */

@@ -10,16 +10,22 @@ class Scraping_model extends CI_Model {
 		require_once('application/libraries/Simple_html_dom.php');
 		$today = date('Y-m-d');
 		if($type == 'forecasts' or $type == 'all'):
-			$this->weather_channel();
-			$this->accuweather();
-			$this->wunderground();
+			if(!$this->already_have_forecasts()):
+				$this->weather_channel();
+				$this->accuweather();
+				$this->wunderground();
+			endif;
 		endif;
 		if($type == 'results' or $type == 'all'):
-			$this->results();
+			if(!$this->already_have_results()):
+				$this->results();
+			endif;
 		endif;
 		if($type == 'grade' or $type == 'all'):
-			$yesterday = date("Y")."-".date("m").'-'.str_pad(((date("d"))-1),2,0,STR_PAD_LEFT);
-			$this->grade($yesterday);
+			if(!$this->already_have_grades()):
+				$yesterday = date("Y")."-".date("m").'-'.str_pad(((date("d"))-1),2,0,STR_PAD_LEFT);
+				$this->grade($yesterday);
+			endif;
 		endif;
 	}
 
@@ -219,11 +225,11 @@ class Scraping_model extends CI_Model {
 			$html = new Simple_html_dom();
 			$html->load_file($url);
 
-			$temp_hi = $html->find('div[id=fct_day_4]',0)->find('div[class=fctDayContent]',0)->find('div[class=fctHiLow]',0)->find('span[class=b]',0);
-			$temp_lo = $html->find('div[id=fct_day_4]',0)->find('div[class=fctDayContent]',0)->find('div[class=fctHiLow]',0);
+			$temp_hi = $html->find('div[class=fctInactive]',2)->find('div[class=fctDayContent]',0)->find('div[class=fctHiLow]',0)->find('span[class=b]',0);
+			$temp_lo = $html->find('div[class=fctInactive]',2)->find('div[class=fctDayContent]',0)->find('div[class=fctHiLow]',0);
 			preg_match_all('/<\/span>(.*)/', $temp_lo, $matches);
 			$temp_lo = preg_replace("/[^0-9,.]/", "", $matches[0][0]);
-			$pop = $html->find('div[id=fct_day_4]',0)->find('div[class=fctDayContent]',0)->find('div[class=fctDayPop]',0)->find('div[class=popValue]',0);
+			$pop = $html->find('div[class=fctInactive]',2)->find('div[class=fctDayContent]',0)->find('div[class=fctDayPop]',0)->find('div[class=popValue]',0);
 
 			$scrape['location_id'] = $id;
 			$scrape['temp_hi'] = $temp_hi->plaintext;
@@ -272,37 +278,83 @@ class Scraping_model extends CI_Model {
 
 	}
 
-	function get_grades($date,$zip=NULL){
+	function already_have_forecasts(){
+		$today = date('Y-m-d');
+		$sql = "SELECT COUNT(*) as c FROM forecasts WHERE date_prediction = ?";
+		$query = $this->db->query($sql,array($today))->result_array();
+		if($query[0]['c']):
+			return true;
+		else:
+			return false;
+		endif;
+	}
+
+	function already_have_results(){
+		$yesterday = date('Y-m-').str_pad(((date("d"))-1),2,0,STR_PAD_LEFT);
+		$sql = "SELECT COUNT(*) as c FROM results WHERE `date` = ?";
+		$query = $this->db->query($sql,array($yesterday))->result_array();
+		if($query[0]['c']):
+			return true;
+		else:
+			return false;
+		endif;
+	}
+
+	function already_have_grades(){
+		$yesterday = date('Y-m-').str_pad(((date("d"))-1),2,0,STR_PAD_LEFT);
+		$sql = "SELECT COUNT(*) as c FROM grades WHERE `date` = ?";
+		$query = $this->db->query($sql,array($yesterday))->result_array();
+		if($query[0]['c']):
+			return true;
+		else:
+			return false;
+		endif;
+	}
+
+	function get_grades($date=NULL,$zip=NULL){
+		$this->load->model('zip_model');
+		if(!$date){
+			$date = date("Y")."-".date("m").'-'.str_pad(((date("d"))-1),2,0,STR_PAD_LEFT);
+		}
+		else{
+			$date = explode('/', $date);
+			$date = $date[2]."-".$date[0].'-'.$date[1];
+		}
+		if($zip!=NULL){
+			$zip = $this->zip_model->proximity_zip($_GET['zip']);
+		}
 		$grades = array();
 		$sql = "SELECT COUNT(*) as c FROM sources";
 		$num_sources_raw = $this->db->query($sql)->result_array();
 		$num_sources = $num_sources_raw[0]['c'];
-		if($zip):
-			$sql = "SELECT location_id FROM locations WHERE zip = ?";
-			$query = $this->db->query($sql,array($zip))->result_array();
-			$loc = $query[0]['location_id'];
-		else:
-			$loc = NULL;
-		endif;
-
 		for ($i=2; $i <= $num_sources; $i++) {
-			if($loc):
-				$sql = "SELECT forecasts.temp_hi as pred_hi, forecasts.temp_lo as pred_lo, forecasts.pop as pred_pop, results.temp_hi as real_hi, results.temp_lo as real_lo, results.precipitation as real_pop, sources.name, grades.grade, grades.date, locations.name, locations.zip FROM sources LEFT JOIN grades ON grades.source_id = sources.source_id LEFT JOIN locations ON locations.location_id = grades.location_id LEFT JOIN forecasts on forecasts.location_id = grades.location_id AND forecasts.source_id = grades.source_id LEFT JOIN results on results.location_id = grades.location_id WHERE grades.date = ? AND grades.source_id = ? AND grades.location_id = ? ORDER BY grades.source_id";
-				$all_grades[$i] = $this->db->query($sql,array($date,$i,$loc+0))->result_array();
-			else:
-				$sql = "SELECT forecasts.temp_hi as pred_hi, forecasts.temp_lo as pred_lo, forecasts.pop as pred_pop, results.temp_hi as real_hi, results.temp_lo as real_lo, results.precipitation as real_pop, sources.name, grades.grade, grades.date, locations.name, locations.zip FROM sources LEFT JOIN grades ON grades.source_id = sources.source_id LEFT JOIN locations ON locations.location_id = grades.location_id LEFT JOIN forecasts on forecasts.location_id = grades.location_id AND forecasts.source_id = grades.source_id LEFT JOIN results on results.location_id = grades.location_id WHERE grades.date = ? AND grades.source_id = ? ORDER BY grades.source_id";
+			$sql = "SELECT forecasts.temp_hi as pred_hi, forecasts.temp_lo as pred_lo, forecasts.pop as pred_pop, results.temp_hi as real_hi, results.temp_lo as real_lo, results.precipitation as real_pop, sources.name, grades.grade, grades.date, locations.name, locations.zip
+			FROM sources
+			LEFT JOIN grades
+			ON grades.source_id = sources.source_id
+			LEFT JOIN locations
+			ON locations.location_id = grades.location_id
+			LEFT JOIN forecasts on forecasts.location_id = grades.location_id
+			AND forecasts.source_id = grades.source_id
+			LEFT JOIN results on results.location_id = grades.location_id
+			WHERE grades.date = ? AND grades.source_id = ?";
+			if($zip){
+				$sql = $sql." AND locations.zip = ?
+				ORDER BY grades.source_id";
+				$all_grades[$i] = $this->db->query($sql,array($date,$i,$zip))->result_array();
+			}
+			else{
 				$all_grades[$i] = $this->db->query($sql,array($date,$i))->result_array();
-			endif;
+			}
+		}
+
+		if(sizeof($all_grades[2])==0){ // No results have been found
+			return NULL;
 		}
 
 		for ($i=2; $i <= $num_sources; $i++) {
-			if($loc):
-				$sql = "SELECT sources.name, sources.source_id, SUM(grades.grade) as total, COUNT(grades.grade) as num FROM sources LEFT JOIN grades ON grades.source_id = sources.source_id WHERE grades.date = ? AND grades.source_id = ? AND grades.location_id = ?";
-				$query = $this->db->query($sql,array($date,$i,$loc+0))->result_array();
-			else:
-				$sql = "SELECT sources.name, sources.source_id, SUM(grades.grade) as total, COUNT(grades.grade) as num FROM sources LEFT JOIN grades ON grades.source_id = sources.source_id WHERE grades.date = ? AND grades.source_id = ?";
-				$query = $this->db->query($sql,array($date,$i))->result_array();
-			endif;
+			$sql = "SELECT sources.name, sources.source_id, SUM(grades.grade) as total, COUNT(grades.grade) as num FROM sources LEFT JOIN grades ON grades.source_id = sources.source_id WHERE grades.date = ? AND grades.source_id = ?";
+			$query = $this->db->query($sql,array($date,$i))->result_array();
 			$grades[$i] = $query[0];
 		}
 
